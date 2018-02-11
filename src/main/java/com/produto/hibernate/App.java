@@ -11,6 +11,7 @@ import com.produto.hibernate.model.Reminder;
 public class App {
 
 	private static EntityManagerFactory entityManagerFactory;
+	private static EntityManager em = entityManagerFactory.createEntityManager();
 
 	public static void main(String[] args) {
 		entityManagerFactory = Persistence.createEntityManagerFactory("hibernatejpa");
@@ -18,6 +19,7 @@ public class App {
 		listAll();
 		findBy();
 		update();
+		delete();
 	}
 
 	public static void insert() {
@@ -25,8 +27,6 @@ public class App {
 		Reminder reminder = new Reminder();
 		reminder.setTitle("Comprar leite");
 		reminder.setDescription("Hoje, 10:30");
-
-		EntityManager em = entityManagerFactory.createEntityManager();
 
 		try {
 			em.getTransaction().begin();
@@ -44,8 +44,6 @@ public class App {
 
 		List<Reminder> remindes = null;
 
-		EntityManager em = entityManagerFactory.createEntityManager();
-
 		try {
 			remindes = em.createQuery("from Reminder").getResultList();
 		} catch (Exception e) {
@@ -62,7 +60,6 @@ public class App {
 	private static void findBy() {
 
 		Reminder reminder;
-		EntityManager em = entityManagerFactory.createEntityManager();
 
 		try {
 			reminder = em.find(Reminder.class, 1L);
@@ -75,11 +72,9 @@ public class App {
 	private static void update() {
 
 		Reminder reminder;
-		EntityManager em = entityManagerFactory.createEntityManager();
 
 		try {
 			reminder = em.find(Reminder.class, 1L);
-
 			reminder.setTitle("Comprar café");
 			reminder.setDescription("Hoje, 8h22");
 
@@ -88,8 +83,24 @@ public class App {
 			em.getTransaction().commit();
 		} catch (Exception e) {
 			em.getTransaction().rollback();
-
 			System.out.println("UPDATE: " + e.getMessage());
+		} finally {
+			em.close();
+		}
+	}
+
+	private static void delete() {
+
+		Reminder reminder;
+
+		try {
+			em.getTransaction().begin();
+			reminder = em.find(Reminder.class, 1l);
+			em.remove(reminder);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			em.getTransaction().rollback();
+			System.out.println("DELETE: " + e.getMessage());
 		} finally {
 			em.close();
 		}
