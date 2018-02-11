@@ -11,10 +11,10 @@ import com.produto.hibernate.model.Reminder;
 public class App {
 
 	private static EntityManagerFactory entityManagerFactory;
-	private static EntityManager em = entityManagerFactory.createEntityManager();
+	 
 
 	public static void main(String[] args) {
-		entityManagerFactory = Persistence.createEntityManagerFactory("hibernatejpa");
+		entityManagerFactory = Persistence.createEntityManagerFactory("hibernatejpa");		
 		insert();
 		listAll();
 		findBy();
@@ -23,7 +23,9 @@ public class App {
 	}
 
 	public static void insert() {
-
+		
+		EntityManager em = entityManagerFactory.createEntityManager();
+		
 		Reminder reminder = new Reminder();
 		reminder.setTitle("Comprar leite");
 		reminder.setDescription("Hoje, 10:30");
@@ -43,6 +45,7 @@ public class App {
 	private static void listAll() {
 
 		List<Reminder> remindes = null;
+		EntityManager em = entityManagerFactory.createEntityManager();
 
 		try {
 			remindes = em.createQuery("from Reminder").getResultList();
@@ -60,6 +63,7 @@ public class App {
 	private static void findBy() {
 
 		Reminder reminder;
+		EntityManager em = entityManagerFactory.createEntityManager();
 
 		try {
 			reminder = em.find(Reminder.class, 1L);
@@ -72,6 +76,7 @@ public class App {
 	private static void update() {
 
 		Reminder reminder;
+		EntityManager em = entityManagerFactory.createEntityManager();
 
 		try {
 			reminder = em.find(Reminder.class, 1L);
@@ -92,6 +97,7 @@ public class App {
 	private static void delete() {
 
 		Reminder reminder;
+		EntityManager em = entityManagerFactory.createEntityManager();
 
 		try {
 			em.getTransaction().begin();
