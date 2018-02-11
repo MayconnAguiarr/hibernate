@@ -1,5 +1,7 @@
 package com.produto.hibernate;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -13,6 +15,7 @@ public class App {
 	public static void main(String[] args) {
 		entityManagerFactory = Persistence.createEntityManagerFactory("hibernatejpa");
 		insert();
+		list();
 	}
 
 	public static void insert() {
@@ -32,6 +35,25 @@ public class App {
 			System.out.println("INSERT: " + e.getMessage());
 		} finally {
 			em.close();
+		}
+	}
+
+	private static void list() {
+
+		List<Reminder> remindes = null;
+
+		EntityManager em = entityManagerFactory.createEntityManager();
+
+		try {
+			remindes = em.createQuery("from Reminder").getResultList();
+		} catch (Exception e) {
+			System.out.println("LIST ALL: " + e.getMessage());
+		} finally {
+			em.close();
+		}
+
+		if (remindes != null) {
+			remindes.forEach(System.out::println);
 		}
 	}
 }
