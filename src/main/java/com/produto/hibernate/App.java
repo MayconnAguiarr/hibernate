@@ -38,7 +38,7 @@ public class App {
 		}
 	}
 
-	private static void list() {
+	private static void listAll() {
 
 		List<Reminder> remindes = null;
 
@@ -55,5 +55,18 @@ public class App {
 		if (remindes != null) {
 			remindes.forEach(System.out::println);
 		}
+	}
+
+	private static void findBy() {
+
+		Reminder reminder;
+		EntityManager em = entityManagerFactory.createEntityManager();
+
+		try {
+		 reminder = em.find(Reminder.class, 1L);
+		} finally {
+			em.close();
+		}
+		System.out.println(reminder);
 	}
 }
