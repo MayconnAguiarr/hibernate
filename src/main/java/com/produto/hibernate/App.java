@@ -15,7 +15,9 @@ public class App {
 	public static void main(String[] args) {
 		entityManagerFactory = Persistence.createEntityManagerFactory("hibernatejpa");
 		insert();
-		list();
+		listAll();
+		findBy();
+		update();
 	}
 
 	public static void insert() {
@@ -63,10 +65,33 @@ public class App {
 		EntityManager em = entityManagerFactory.createEntityManager();
 
 		try {
-		 reminder = em.find(Reminder.class, 1L);
+			reminder = em.find(Reminder.class, 1L);
 		} finally {
 			em.close();
 		}
 		System.out.println(reminder);
+	}
+
+	private static void update() {
+
+		Reminder reminder;
+		EntityManager em = entityManagerFactory.createEntityManager();
+
+		try {
+			reminder = em.find(Reminder.class, 1L);
+
+			reminder.setTitle("Comprar café");
+			reminder.setDescription("Hoje, 8h22");
+
+			em.getTransaction().begin();
+			em.merge(reminder);
+			em.getTransaction().commit();
+		} catch (Exception e) {
+			em.getTransaction().rollback();
+
+			System.out.println("UPDATE: " + e.getMessage());
+		} finally {
+			em.close();
+		}
 	}
 }
